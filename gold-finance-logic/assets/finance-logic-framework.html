@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融底层逻辑学习框架 · 以黄金为锚（补全版）</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --ink:#1f2329; --sub:#5f6368; --line:#e3e6ea;
+    --brand:#b8860b; --brand2:#1f6f54; --ok:#1f8a4c; --bad:#c0392b; --soft:#eef3fb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
+  header{padding:28px 20px 18px;background:linear-gradient(135deg,#2a2a2a,#3d2f12);color:#fff}
+  header h1{margin:0 0 6px;font-size:22px;font-weight:600}
+  header p{margin:0;color:#d9d9d9;font-size:13px}
+  .wrap{max-width:880px;margin:0 auto;padding:18px}
+  .progress{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:12px;font-size:13px}
+  .bar{flex:1;height:8px;background:var(--line);border-radius:6px;overflow:hidden}
+  .bar > i{display:block;height:100%;width:0;background:var(--brand2);transition:width .3s}
+  .module{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:16px 0;overflow:hidden}
+  .mhead{padding:16px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+  .mhead .no{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;flex:none}
+  .mhead h2{margin:0;font-size:17px;font-weight:600;flex:1}
+  .mhead .tag{font-size:12px;color:var(--sub)}
+  .mhead .state{font-size:12px;padding:2px 10px;border-radius:999px;background:var(--soft);color:var(--sub)}
+  .mhead .state.done{background:#e6f4ea;color:var(--ok)}
+  .mbody{padding:6px 18px 18px;display:none}
+  .module.open .mbody{display:block}
+  .block{padding:12px 0;border-bottom:1px dashed var(--line)}
+  .block:last-child{border-bottom:none}
+  .lab{display:inline-block;font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px;margin-bottom:6px}
+  .lab.what{background:#eef3fb;color:#2b5fb3}
+  .lab.why{background:#fbf2e3;color:#9a6a00}
+  .lab.case{background:#f0eafb;color:#6b3fa0}
+  .block p{margin:6px 0;font-size:14.5px}
+  .block ul{margin:6px 0;padding-left:20px;font-size:14px}
+  .block li{margin:3px 0}
+  .hl{background:#fff6da;padding:0 3px;border-radius:3px}
+  .chain{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:13.5px}
+  .chain b{color:var(--brand2)}
+  .quiz{margin-top:14px;background:var(--soft);border-radius:12px;padding:14px}
+  .quiz h3{margin:0 0 10px;font-size:15px;color:var(--brand2)}
+  .q{margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .q .qt{font-size:14.5px;font-weight:500;margin-bottom:8px}
+  .opt{display:block;padding:8px 10px;margin:5px 0;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-size:14px}
+  .opt:hover{border-color:var(--brand)}
+  .opt input{margin-right:8px}
+  .opt.correct{border-color:var(--ok);background:#e9f7ef}
+  .opt.wrong{border-color:var(--bad);background:#fdecea}
+  .qbtns{margin-top:8px}
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:500}
+  .b-sub{background:var(--brand2);color:#fff}
+  .b-sim{background:#fff;border:1px solid var(--brand2);color:var(--brand2)}
+  .b-next{background:var(--brand);color:#fff}
+  .fb{margin-top:10px;font-size:13.5px;padding:10px;border-radius:8px;display:none}
+  .fb.ok{display:block;background:#e9f7ef;color:#145a32;border:1px solid #bfe6cd}
+  .fb.no{display:block;background:#fdecea;color:#7b241c;border:1px solid #f5b7b1}
+  .fb b{font-weight:600}
+  .pcenter{text-align:center;color:var(--sub);font-size:13px;margin:10px 0}
+  .note{font-size:12.5px;color:var(--sub);background:#fbfbfa;border:1px solid var(--line);border-radius:10px;padding:12px;margin:14px 0}
+  .reset{background:#fff;border:1px solid var(--line);color:var(--sub);padding:4px 10px;font-size:12px}
+  .gen{margin-top:12px;background:#fbf7ec;border:1px solid #ecd9a8;border-radius:12px;padding:14px}
+  .gen h3{margin:0 0 10px;font-size:15px;color:#9a6a00}
+  .gen .row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+  .gen select{font-family:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .gen #sentenceOut{margin-top:12px;padding:12px;background:#fff;border:1px dashed var(--brand);border-radius:10px;font-size:14.5px;line-height:1.8;min-height:48px}
+  table.mat{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
+  table.mat th,table.mat td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  table.mat th{background:var(--soft);font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <h1>金融底层逻辑学习框架</h1>
+  <p>以「黄金的底层逻辑」为主线 · 是什么 → 为什么（底层逻辑）→ 反常案例 · 每节 3 题自测，答错自动生成相似题重测 · 末附判断句生成器</p>
+</header>
+
+<div class="progress">
+  <span>掌握进度</span>
+  <div class="bar"><i id="bar"></i></div>
+  <span id="pct">0%</span>
+  <button class="reset" onclick="resetAll()">重置进度</button>
+</div>
+
+<div class="wrap" id="app"></div>
+
+<div class="wrap">
+  <div class="note">
+    ⚠️ 本框架为<strong>金融认知学习材料</strong>，用于建立底层思维框架，<strong>不构成任何投资建议</strong>。内容主线索来自《黄金底层驱动逻辑与实战判断》，结构按「是什么→为什么→反常案例」展开，并在模块四对接了「当铺财经·决战今晚CPI」一期作为实战样例。
+  </div>
+</div>
+
+<script>
+/* ============== 课程数据 ============== */
+const COURSE = [
+  /* ---------- 模块一 ---------- */
+  {
+    title:"模块一 · 黄金是什么",
+    sub:"先建立共识：为什么人类千年选了黄金",
+    blocks:[
+      {lab:"what",cls:"what",html:`<p><b>黄金</b>是一种化学元素（Au），物理上<b>稀缺、稳定不易腐蚀、易分割、易携带</b>。人类几千年来把它当货币、当储备，今天它既是<b>商品</b>（首饰、工业用金），也是<b>金融资产</b>（避险、抗通胀、各国央行储备）。</p>`},
+      {lab:"why",cls:"why",html:`<p>底层逻辑只有一句话：<span class="hl">黄金的价值来自“无信用风险的天然共识”，而不依赖任何政府背书。</span></p>
+        <p>对比一下你就懂了——你手里的纸币（法币）值钱，是因为“国家信用 + 法律强制”；而黄金值钱，是因为<b>不管哪个国家、哪场战争，人们都认它</b>。这条区别，是后面所有金融逻辑的起点。</p>
+        <p>PDF 给了一个更完整的定价公式：<b>黄金价格 = 持有它的机会成本 + 持有它的保险价值</b>。美债实际收益率决定机会成本，美元决定计价与全球购买力，风险事件、美元信用和央行购金决定保险溢价与长期需求。记住这个“两分法”，后面所有指标都能归到这两类里去。</p>`},
+    ],
+    quiz:[
+      {q:"黄金被人类沿用作货币/储备数千年，最核心的原因是？",
+       o:["A. 地球上产量最高","B. 颜色最好看","C. 天然稀缺、稳定、跨文明共识、不依赖政府背书","D. 最容易大量印刷"],
+       a:2,
+       e:"黄金的“信任”来自物理属性（稀缺、不易腐蚀、易分割）和跨文明共识，不依赖任何国家信用——这正是它和法币的根本区别。",
+       sim:[
+        {q:"同样是“钱”，黄金和纸币（法币）的根本区别是？",o:["A. 黄金更重","B. 黄金价值靠物理属性与跨文明共识，法币靠国家信用与法律强制","C. 黄金能吃","D. 法币不能分割"],a:1,e:"法币值钱靠“国家信用+法律强制”，黄金值钱靠“无信用风险的天然共识”，这是二者本质差异。"},
+        {q:"PDF 提出黄金价格由哪两部分共同决定？",o:["A. 重量与颜色","B. 机会成本 + 保险价值","C. 开采成本 + 运费","D. 供需 + 情绪"],a:1,e:"黄金价格 = 持有它的机会成本 + 持有它的保险价值，前者由实际利率决定，后者由风险/信用/央行需求决定。"}
+       ]},
+      {q:"PDF 里“黄金价格 = 机会成本 + 保险价值”，其中“机会成本”主要由什么决定？",
+       o:["A. 黄金的重量","B. 美债实际收益率","C. 首饰工费","D. 美元符号印刷量"],
+       a:1,
+       e:"美债实际收益率（TIPS）决定持有零息黄金的机会成本：实际利率越高，持有黄金越“贵”，金价承压。",
+       sim:[
+        {q:"“保险价值”这一部分，主要由哪些因素提供？",o:["A. 工费与运费","B. 风险事件、美元信用、央行购金","C. 黄金颜色","D. 交易所手续费"],a:1,e:"保险溢价与长期需求来自战争/地缘、美元信用担忧、去美元化与央行持续购金。"},
+        {q:"为什么黄金“不生息”这件事很重要？",o:["A. 因为它轻","B. 因为不生息，所以持有它的代价就是放弃了美债能给你的利息（机会成本）","C. 因为它闪","D. 因为它便宜"],a:1,e:"零息资产的“代价”就是放弃的实际利率收益，这正是机会成本链的起点。"}
+       ]},
+      {q:"把黄金和法币对比，下面哪句最贴近底层逻辑？",
+       o:["A. 黄金和纸币一样靠政府背书","B. 黄金的价值来自无信用风险的天然共识，不依赖政府","C. 黄金是最近才被认可的","D. 法币比黄金更“天然”"],
+       a:1,
+       e:"黄金的信任不依赖任何政府，而法币依赖国家信用；这正是理解后续“信用危机时黄金反而涨”的钥匙。",
+       sim:[
+        {q:"为什么“信用动摇”时黄金往往被追捧？",o:["A. 因为它能发电","B. 因为它是少数不依赖单一国家信用、跨文明的共识资产，是对信用风险的保险","C. 因为它重","D. 因为金价低"],a:1,e:"当人们对某国货币/美债信用生疑，黄金作为“无信用风险”的标的就成了保险。"}
+       ]},
+    ]
+  },
+  /* ---------- 模块二 ---------- */
+  {
+    title:"模块二 · 四层传导：从数据到金价的完整链路",
+    sub:"为什么指标只是入口，真正决定方向的是预期与利率",
+    blocks:[
+      {lab:"what",cls:"what",html:`<p>PDF 把分析拆成<b>四层</b>，从宏观数据一路传导到金价：</p>
+        <div class="chain"><b>第1层 宏观状态</b>：CPI、PCE、PPI、非农、失业率、时薪、GDP、初请 → 判断是需求型通胀、供给型通胀、软着陆还是衰退（只定方向，不直接定价）。</div>
+        <div class="chain"><b>第2层 政策预期</b>：美联储加息/降息、点阵图、QT/QE、官员表态 → 转换成未来名义利率与美元路径（转鹰压金、转鸽利多）。</div>
+        <div class="chain"><b>第3层 定价锚</b>：名义收益率、通胀预期、TIPS 实际收益率、美元指数 → 判断实际利率方向和美元方向（实际利率下行、美元走弱 = 黄金核心顺风）。</div>
+        <div class="chain"><b>第4层 风险与结构</b>：战争、地缘、美债上限、制裁、去美元化、央行购金 → 转换成避险溢价、信用溢价与长期官方需求（短期可压倒利率逻辑，长期抬高底部）。</div>`},
+      {lab:"why",cls:"why",html:`<p>为什么是这四层？因为<b>指标本身不直接给黄金定价</b>——它们先改变“美联储会怎么做”的预期，预期改变名义利率和美元，再和通胀预期汇合决定实际利率，最后由风险结构叠加保险溢价。所以你看到 CPI，第一反应不该是“通胀高=买黄金”，而是“这个数据会把第2、3层的预期往哪推”。</p>
+        <p><b>必须记牢的四条规则：</b></p>
+        <ul>
+          <li>① <span class="hl">实际利率方向比通胀绝对高低更重要</span>——高通胀若伴随名义利率上行更慢，实际利率反而下行，黄金可能涨。</li>
+          <li>② 就业和 GDP 先改变美联储预期（经济强→通胀韧→加息预期）。</li>
+          <li>③ 美元与黄金正常负相关，<b>危机时可能同涨</b>（都当避险资产）。</li>
+          <li>④ 央行购金是慢变量，<b>抬高底部，不适合短线择时</b>。</li>
+        </ul>`},
+    ],
+    quiz:[
+      {q:"宏观数据（如 CPI、非农）对金价的作用是？",
+       o:["A. 直接决定金价涨跌","B. 只影响情绪","C. 先改变美联储政策预期，再间接传导到实际利率/美元","D. 完全没用"],
+       a:2,
+       e:"指标不直接定价黄金，而是先改变政策预期，再经实际利率/美元传导——这就是四层框架的核心。",
+       sim:[
+        {q:"四层框架里，市场真正每天交易的核心“定价锚”是？",o:["A. 新闻标题","B. TIPS 实际收益率与美元方向","C. 黄金重量","D. 交易所人数"],a:1,e:"第3层定价锚（实际利率、美元）才是每日交易的核心；宏观数据只是入口。"},
+        {q:"为什么“实际利率方向比通胀绝对高低更重要”？",o:["A. 因为通胀不重要","B. 因为若名义利率上行慢于通胀预期，实际利率反而下行，黄金可能利多","C. 因为通胀永远涨","D. 因为金价只看法币"],a:1,e:"黄金看的是“持有它的代价”（实际利率），不是 CPI 数字本身。"}
+       ]},
+      {q:"四条规则中“美元与黄金正常负相关，危机时可能同涨”说明？",
+       o:["A. 两者永远反向","B. 相关性会随环境切换：重大危机中同为零息/避险资产可同涨","C. 美元永远涨","D. 黄金不避险"],
+       a:1,
+       e:"美元与黄金的相关性不是恒定的；系统性危机时两者都承担避险功能，可同步上行。",
+       sim:[
+        {q:"“央行购金抬高底部，不适合短线择时”是想提醒你？",o:["A. 央行会天天买卖","B. 央行购金是长期结构性变量，改变长期供需底部，但不提供短线买卖点","C. 央行不买黄金","D. 购金只影响一天"],a:1,e:"长期慢变量看央行购金定趋势，中短期节奏看利率与美元。"}
+       ]},
+      {q:"读指标传导表时，第一步应该先看什么？",
+       o:["A. 指标绝对值大小","B. 指标是否偏离市场预期","C. 谁发的新闻","D. 金价历史高点"],
+       a:1,
+       e:"PDF 读表方法第一条：先看指标是否偏离市场预期，再沿“政策预期→实际利率/美元→黄金”传导。",
+       sim:[
+        {q:"为什么“预期差”比“绝对水平”更关键？",o:["A. 因为市场提前定价，真正驱动行情的是数据相对预期的正负偏差","B. 因为绝对值没意义","C. 因为新闻更准","D. 因为金价随机"],a:0,e:"市场提前交易预期，公布值符合预期往往“利好出尽”，超预期/不及预期才驱动行情。"}
+       ]},
+    ]
+  },
+  /* ---------- 模块三 ---------- */
+  {
+    title:"模块三 · 三条底层链与通胀双路径",
+    sub:"把所有指标串起来的“主链 / 弹性链 / 保险链”",
+    blocks:[
+      {lab:"what",cls:"what",html:`<p>所有指标最终汇入<b>三条链</b>，实盘先判断哪条占主导，再看其他链是加强还是对冲：</p>
+        <div class="chain"><b>① 机会成本链（主链）</b>：通胀/就业/GDP → 美联储政策预期 → 名义利率与通胀预期 → 实际利率 → 金价。利多=实际利率下行；利空=实际利率上行。</div>
+        <div class="chain"><b>② 计价与美元链（弹性）</b>：美联储相对政策 → 美元指数 → 非美元买家成本与全球美元流动性 → 金价。利多=美元走弱；利空=美元走强。</div>
+        <div class="chain"><b>③ 风险与信用链（保险）</b>：战争/债务/制裁/去美元化/央行购金 → 避险与储备需求 → 金价。利多=风险升级、央行净购金；利空=风险缓和。</div>`},
+      {lab:"why",cls:"why",html:`<p>为什么要把通胀<b>拆成两条路径</b>？因为不同成因，政策反应和黄金基准完全不同：</p>
+        <ul>
+          <li><b>需求型通胀</b>：需求强、就业火、工资涨 → 美联储更可能加息/偏鹰 → <span class="hl">通常偏空</span>。</li>
+          <li><b>供给型通胀</b>：能源、原材料、运输成本涨，增长同时承压（典型如油价冲击）→ 央行两难 → <span class="hl">偏多但震荡（滞胀交易）</span>；若央行极端加息或触发流动性危机则先承压。</li>
+          <li><b>信用型风险</b>：美债上限、冻结外储、制裁、去美元化 → 货币政策修不了信用 → <span class="hl">偏多</span>，且收益率与黄金可能同涨，传统实际利率框架阶段性失效。</li>
+        </ul>
+        <p><b>实盘“四个不要”</b>：①不看绝对水平看预期差；②不混时间尺度（TIPS/美元偏中短期，央行购金/去美元化偏长期）；③不把相关性当因果；④不只判方向，还要看幅度、持续时间和价格是否已提前定价。</p>`},
+    ],
+    quiz:[
+      {q:"三条底层链中，被称为“主链”的是哪条？",
+       o:["A. 计价与美元链","B. 机会成本链（实际利率链）","C. 风险与信用链","D. 新闻情绪链"],
+       a:1,
+       e:"机会成本链（实际利率）是主链，决定黄金中短期方向；其余是弹性或保险。",
+       sim:[
+        {q:"“计价与美元链”的利多条件是？",o:["A. 美元走强","B. 美元走弱或全球美元流动性改善","C. 美国相对收益率优势扩大","D. 全球流动性收紧"],a:1,e:"美元走弱、美联储相对他国更鸽、全球美元流动性改善，对黄金是顺风。"},
+        {q:"“风险与信用链”提供的需求主要来自？",o:["A. 工费","B. 战争/债务/制裁/去美元化/央行购金带来的避险与储备需求","C. 黄金颜色","D. 运输费"],a:1,e:"保险链由地缘、信用、去美元化与央行购金驱动，属长期结构性需求。"}
+       ]},
+      {q:"油价暴涨推高通胀（供给型冲击），黄金基准通常偏？",
+       o:["A. 单纯偏空","B. 偏多但震荡（滞胀交易）；若央行极端加息先承压","C. 完全没影响","D. 只影响原油不影响黄金"],
+       a:1,
+       e:"供给型通胀易触发滞胀交易，黄金偏多但震荡；只有央行极端加息或流动性危机时才会先被压制。",
+       sim:[
+        {q:"同样是“高通胀”，为什么需求型偏空、供给型偏多？",o:["A. 因为需求型会逼美联储加息抬实际利率，供给型伴随增长承压使央行两难、且带避险属性","B. 因为供给型不叫通胀","C. 因为需求型利好黄金","D. 因为油价不计入CPI"],a:0,e:"需求型通胀→加息预期→实际利率上行→偏空；供给型→滞胀+避险→偏多但震荡。"}
+       ]},
+      {q:"美元信用危机时，实际利率框架会怎样？",
+       o:["A. 永远有效","B. 阶段性失效：资金抛售美债使 TIPS 上升，但黄金也上涨","C. 黄金必跌","D. 美元必跌黄金必跌"],
+       a:1,
+       e:"信用危机时，收益率与黄金可同步上行，传统“实际利率↑=金价↓”暂时失效，这是最重要例外。",
+       sim:[
+        {q:"“不要把相关性当因果”在黄金上指什么？",o:["A. 美元与黄金、实际利率与黄金都可能因危机阶段性同向","B. 两者永远相关","C. 黄金只跟美元走","D. 相关系数恒为-1"],a:0,e:"危机环境下相关性会切换，不能机械套用常态的负相关。"}
+       ]},
+    ]
+  },
+  /* ---------- 模块四 ---------- */
+  {
+    title:"模块四 · 五大反转：为什么直觉会骗你",
+    sub:"对接「当铺财经·决战今晚CPI」——CPI高≠黄金涨",
+    blocks:[
+      {lab:"case",cls:"case",html:`<p>PDF 列了<b>最容易犯错的五种反转</b>。每一个都是“看起来该涨/跌，实际反着来”：</p>
+        <ul>
+          <li><b>① TIPS 上升，黄金也涨</b> → 误判模型失效；真实逻辑：美元信用风险上升，资金抛美债增配黄金。<b>先确认是否债务/制裁/去美元化主线，再决定是否暂弃利率锚。</b></li>
+          <li><b>② 美元上涨，黄金也涨</b> → 误判做空；真实逻辑：重大危机中，美元与黄金同为避险资产同步上涨。<b>普通风险看美元，系统性风险看避险溢价。</b></li>
+          <li><b>③ CPI 很高，黄金下跌</b> → 误判把高通胀直接等同利多；真实逻辑：<span class="hl">加息预期和实际利率上行更快，机会成本压过了通胀对冲</span>。<b>要比的是名义收益率与通胀预期谁跑得快。</b></li>
+          <li><b>④ 美联储降息，黄金下跌</b> → 误判把降息等同利多；真实逻辑：降息可能来自衰退或流动性危机，实际利率未必下降。<b>区分预防式降息与危机式降息。</b></li>
+          <li><b>⑤ 地缘冲突升级，黄金下跌</b> → 误判避险无效；真实逻辑：冲突推高油价和通胀，迫使央行偏鹰，利率链压过避险链。<b>拆开两条链比强度。</b></li>
+        </ul>
+        <p>📺 <b>对接实战</b>：我们刚分析的「当铺财经·决战今晚CPI（09/29）」讲的就是 <b>反转③</b>。那期要你盯的不是“CPI 高=买黄金”，而是 CPI 读数把“实际利率预期”往哪边推——9/28 油价暴涨推升加息预期，实际利率冲到 2.90%，金价反跌 4%。这正是对“五大反转”的活用例。</p>`},
+    ],
+    quiz:[
+      {q:"“CPI 很高，黄金却下跌”的底层真实逻辑是？",
+       o:["A. 黄金失效了","B. 加息预期和实际利率上行更快，机会成本压过了通胀对冲","C. CPI 不算通胀","D. 黄金只跟美元"],
+       a:1,
+       e:"高通胀若带来更快的加息预期，名义利率上行快于通胀预期，实际利率上行，黄金的机会成本上升——这正是当铺财经那期讲的。",
+       sim:[
+        {q:"判断“CPI高黄金跌”时，关键要比什么速度？",o:["A. 比谁发新闻快","B. 比名义收益率与通胀预期的变化速度","C. 比金价历史","D. 比交易量"],a:1,e:"实际利率=名义利率−通胀预期；谁上行更快，决定金价方向。"},
+        {q:"当铺财经“决战今晚CPI”提醒你最终盯住哪个指标？",o:["A. CPI 数字本身","B. 10年美债实际利率（TIPS）是否拐头","C. 黄金重量","D. 新闻标题"],a:1,e:"它强调金价的根在实际利率，CPI 只是改变实际利率预期的入口。"}
+       ]},
+      {q:"美联储降息，黄金却下跌，最可能的原因是？",
+       o:["A. 降息永远利空","B. 这是危机式降息（衰退/流动性危机），实际利率未必下降","C. 黄金不喜欢降息","D. 美元消失"],
+       a:1,
+       e:"预防式降息（经济好、小幅宽松）利多；危机式降息（衰退/流动性危机）实际利率未必降，甚至先被抛售。",
+       sim:[
+        {q:"区分降息性质时，该看什么？",o:["A. 金价历史","B. 流动性、美元、信用利差与降息背景","C. 新闻情绪","D. 交易量"],a:1,e:"看降息是“经济软着陆的预防”还是“危机救市”，决定实际利率走向。"}
+       ]},
+      {q:"美元和黄金“同涨”一般出现在什么环境？",
+       o:["A. 永远同涨","B. 重大系统性危机中，两者同为零息/避险资产","C. 美元永远涨黄金跟涨","D. 只在和平时期"],
+       a:1,
+       e:"常态下美元与黄金负相关；只有系统性危机时，两者同时承担避险功能而同涨。",
+       sim:[
+        {q:"“美元上涨黄金也涨”时，正确做法是？",o:["A. 机械做空黄金","B. 先判断危机等级：普通风险看美元，系统性风险看避险溢价","C. 不管直接买","D. 直接卖一切"],a:1,e:"要区分风险类型，再决定美元信号能否直接用于黄金。"}
+       ]},
+    ]
+  },
+  /* ---------- 模块五 ---------- */
+  {
+    title:"模块五 · 三个反常的宏观世界",
+    sub:"布雷顿森林 / 日本失去的三十年 / 俄罗斯 3000 亿",
+    blocks:[
+      {lab:"case",cls:"case",html:`<p>把框架放大到“货币与信用体系”本身，三个反常案例最能检验你的认知：</p>
+        <ul>
+          <li><b>① 布雷顿森林体系（1944–1971）</b>：美元与黄金挂钩（35美元/盎司），其他货币挂钩美元。这是“金本位秩序”。<span class="hl">1971 尼克松关闭黄金窗口</span> → 美元与黄金脱钩，信用货币（法币）时代正式开启。黄金从“货币之锚”变成“对信用货币的保险”。<b>崩塌根因是“特里芬难题”</b>：美元要既为全球提供流动性、又要能按固定比兑换黄金，二者不可兼得；美国通胀+赤字使兑换承诺无法守住。</li>
+          <li><b>② 日本“失去的三十年”</b>：1990 泡沫破裂后，日本央行长期零利率、量化宽松、QQE，但物价与 GDP 长期躺平——<span class="hl">流动性陷阱</span>。说明“放水≠涨价、≠金价必涨”。货币大量淤积在金融空转，印证框架里“央行购金抬高底部是长期慢变量，短期放水未必推金价”。</li>
+          <li><b>③ 俄罗斯 3000 亿外储被冻结（2022）</b>：欧美冻结俄央行约 3000 亿美元外汇储备，证明“<span class="hl">储备安全取决于发行国信用</span>”。后果：全球去美元化加速、各国央行猛购黄金 → 长期抬高金价底部。这是框架“风险与信用链”最硬的案例。</li>
+        </ul>`},
+    ],
+    quiz:[
+      {q:"布雷顿森林体系崩塌的根本原因是？",
+       o:["A. 黄金太多","B. 特里芬难题：美元无法既做全球流动性又守住固定兑换黄金","C. 战争毁了黄金","D. 美国不想用美元"],
+       a:1,
+       e:"特里芬难题使美元“全球流动性供给”与“固定兑换黄金”承诺冲突，通胀+赤字下承诺无法维持，1971年脱钩。",
+       sim:[
+        {q:"1971 年尼克松关闭黄金窗口意味着什么？",o:["A. 黄金消失","B. 美元与黄金脱钩，信用货币（法币）时代开启，黄金从货币之锚变对信用的保险","C. 美元更值钱","D. 黄金不能交易"],a:1,e:"这是金本位到信用货币的分水岭，也是理解“黄金=信用保险”的起点。"},
+        {q:"布雷顿森林时期，美元与黄金的关系是？",o:["A. 完全无关","B. 固定挂钩（35美元/盎司）","C. 美元贬值为零","D. 黄金由美国私企定价"],a:1,e:"体系核心就是美元按固定价兑换黄金，其他货币挂钩美元。"}
+       ]},
+      {q:"日本“失去的三十年”给我们的金融启示是？",
+       o:["A. 放水必然推高金价","B. 流动性陷阱下，放水未必推高物价/金价，货币可能空转","C. 日本没有央行","D. 黄金在日本无效"],
+       a:1,
+       e:"长期零利率+QE 仍陷入通缩，说明货币宽松不自动等于通胀或金价上涨，需看传导是否通畅。",
+       sim:[
+        {q:"“流动性陷阱”指什么状态？",o:["A. 钱太多物价暴涨","B. 利率已极低、货币宽松失效，资金不愿投资消费而空转","C. 没有流动性","D. 黄金短缺"],a:1,e:"陷阱下传统货币宽松失灵，呼应框架中“短期放水未必推金价”。"}
+       ]},
+      {q:"俄罗斯约 3000 亿外储被冻结，长期影响是？",
+       o:["A. 黄金失去价值","B. 去美元化加速、各国央行猛购黄金，长期抬高金价底部","C. 美元更安全","D. 外汇储备没用"],
+       a:1,
+       e:"它证明储备安全依赖发行国信用，促使全球分散储备、增持黄金，对应框架“风险与信用链”的长期底部支撑。",
+       sim:[
+        {q:"为什么“外储被冻结”会推升黄金需求？",o:["A. 因为黄金能发电","B. 因为各国担心单一货币储备的信用风险，转向不依赖任何国家的黄金","C. 因为金价低","D. 因为美元消失"],a:1,e:"信用担忧使黄金的“无信用风险”属性被重新定价，央行增持成长期需求。"}
+       ]},
+    ]
+  },
+  /* ---------- 模块六 ---------- */
+  {
+    title:"模块六 · 实战判断法：七步 + 判断句模板",
+    sub:"把框架落成可操作的句子（附情景矩阵与生成器）",
+    blocks:[
+      {lab:"why",cls:"why",html:`<p><b>实战七步（按顺序）：</b></p>
+        <ol>
+          <li>宏观状态：需求型/供给型通胀、软着陆还是衰退？</li>
+          <li>政策预期：加息/降息定价在上修还是下修？</li>
+          <li>实际利率：TIPS 实际收益率方向上行还是下行？</li>
+          <li>美元：走强是正常周期还是危机避险？</li>
+          <li>风险溢价：地缘/债务/制裁风险升级还是缓和？</li>
+          <li>结构需求：央行是否持续净购金、去美元化延续？</li>
+          <li>价格确认：价格/量/持仓/ETF 是否验证逻辑？</li>
+        </ol>
+        <p><b>总纲</b>：黄金中短期交易“美联储路径 + 美元实际利率”，长周期底部由美元信用、地缘、去美元化、央行购金共同抬高。<span class="hl">先定环境，再定主链，再用例外校正，最后用价格确认。</span></p>
+        <p><b>判断句模板</b>：在【宏观情景】下，因为【主要矛盾】推动美联储【转鹰/转鸽/观望】，所以实际利率大概率【上行/下行】、美元【走强/走弱】、风险溢价【上升/下降】；因此黄金中短期偏【多/空/震荡】。若出现【信用/流动性/供给/政策预期反转】，则以上逻辑需重新定价。</p>`},
+      {lab:"case",cls:"case",html:`<p><b>情景矩阵（同一数据，不同环境结果不同）：</b></p>
+        <table class="mat">
+          <tr><th>情景</th><th>通胀</th><th>增长/就业</th><th>美联储</th><th>黄金基准</th></tr>
+          <tr><td>软着陆/金发姑娘</td><td>降温</td><td>稳定</td><td>观望或小降</td><td>偏多</td></tr>
+          <tr><td>高通胀+强就业</td><td>高</td><td>强</td><td>偏鹰</td><td>偏空</td></tr>
+          <tr><td>滞胀</td><td>高</td><td>弱</td><td>两难</td><td>偏多但波动大</td></tr>
+          <tr><td>衰退/降息</td><td>下行</td><td>弱</td><td>降息</td><td>偏多</td></tr>
+          <tr><td>流动性危机</td><td>不定</td><td>恶化</td><td>宽松救市</td><td>先跌后涨</td></tr>
+          <tr><td>美债/美元信用危机</td><td>次要</td><td>不定</td><td>被动</td><td>偏多（收益率可同涨）</td></tr>
+          <tr><td>地缘+原油冲击</td><td>上行</td><td>走弱</td><td>难宽松</td><td>偏多但震荡</td></tr>
+          <tr><td>央行购金/去美元化</td><td>影响小</td><td>影响小</td><td>长期影响</td><td>长期偏多</td></tr>
+        </table>`},
+      {lab:"what",cls:"what",html:`<div class="gen">
+        <h3>🧪 判断句生成器（选完自动造句）</h3>
+        <div class="row">
+          <select id="s1"><option>软着陆/金发姑娘</option><option>高通胀+强就业</option><option>滞胀</option><option>衰退/降息</option><option>流动性危机</option><option>美债/美元信用危机</option><option>地缘+原油冲击</option><option>央行购金/去美元化</option></select>
+          <select id="s2"><option>通胀受控、就业走弱</option><option>通胀黏性、就业强劲</option><option>油价冲击推升通胀</option><option>衰退与信用担忧</option><option>债务上限/制裁/去美元化</option></select>
+          <select id="s3"><option>转鸽</option><option>转鹰</option><option>观望</option></select>
+          <select id="s4"><option>下行</option><option>上行</option></select>
+          <select id="s5"><option>走弱</option><option>走强</option><option>危机时同涨</option></select>
+          <select id="s6"><option>下降</option><option>上升</option></select>
+          <select id="s7"><option>多</option><option>空</option><option>震荡</option></select>
+        </div>
+        <div id="sentenceOut"></div>
+      </div>`},
+    ],
+    quiz:[
+      {q:"实战七步里，第 7 步“价格确认”要你做的是？",
+       o:["A. 只看宏观观点","B. 用价格、成交量、持仓、ETF 资金流验证宏观逻辑，避免只有观点没有确认","C. 忽略价格","D. 只看新闻"],
+       a:1,
+       e:"宏观观点必须过价格与资金流验证；价格背离逻辑、关键支撑失守时，要怀疑原判断。",
+       sim:[
+        {q:"总纲说“先定环境，再定主链，再用例外校正，最后用价格确认”，其中“例外”指什么？",o:["A. 五大反转类的反常情况（信用/流动性/供给冲击）","B. 新闻标题","C. 金价颜色","D. 交易量"],a:0,e:"例外即五大反转与情景矩阵中的条件性重定价情形。"},
+        {q:"为什么“不只判断方向，还要看幅度与是否已定价”？",o:["A. 因为市场常提前交易预期，利好出尽不涨反跌","B. 因为方向没用","C. 因为价格随机","D. 因为只看方向更简单"],a:0,e:"预期差与提前定价决定行情大小，光判方向不够。"}
+       ]},
+      {q:"判断句模板中“若出现信用/流动性/政策预期反转，则重新定价”说明？",
+       o:["A. 模板永不改","B. 例外条件会推翻主链逻辑，必须动态校正","C. 只信模板","D. 反转不存在"],
+       a:1,
+       e:"五大反转与情景矩阵的存在，就是提醒主链会被信用危机、流动性危机等例外推翻。",
+       sim:[
+        {q:"情景矩阵的核心价值是？",o:["A. 证明金价只跟一种环境","B. 同一数据在不同宏观环境下结果不同，须先定环境再判方向","C. 矩阵没用","D. 只记一种情形"],a:1,e:"先定环境，是七步法的第1步，也是避免误判的前提。"}
+       ]},
+      {q:"黄金的长周期底部，主要由什么共同抬高？",
+       o:["A. 短期情绪","B. 美元信用、地缘风险、去美元化、央行购金","C. 工费","D. 新闻标题"],
+       a:1,
+       e:"中短期看美联储路径与实际利率，长周期底部由美元信用、地缘、去美元化、央行购金抬高——这正是框架的总纲。",
+       sim:[
+        {q:"“中短期交易美联储路径+实际利率，长期看信用/央行购金”这句话区分了什么？",o:["A. 区分时间尺度：短看利率，长看结构与信用","B. 区分颜色","C. 区分重量","D. 没有区分"],a:0,e:"不混时间尺度是“四个不要”之一，短期节奏与长期趋势要用不同变量。"}
+       ]},
+    ]
+  },
+];
+
+/* ============== 渲染与交互 ============== */
+const STORE="gold_study_v2";
+let _mem={}; // 内存兜底：当 localStorage 不可用（如沙箱 iframe）时仍能用
+function _load(){ try{ return JSON.parse(localStorage.getItem(STORE)||"{}"); }catch(e){ try{return _mem[STORE]?JSON.parse(_mem[STORE]):{};}catch(_){return {};} } }
+function _save(s){ try{ localStorage.setItem(STORE,s); }catch(e){ _mem[STORE]=s; } }
+let state = _load(); // {moduleIdx:{qIdx:true}}
+
+function save(){_save(JSON.stringify(state));updateBar();}
+function updateBar(){
+  let done=0,total=COURSE.length;
+  COURSE.forEach((m,i)=>{ if(state[i] && Object.keys(state[i]).length>=m.quiz.length) done++; });
+  let pct=Math.round(done/total*100);
+  document.getElementById("bar").style.width=pct+"%";
+  document.getElementById("pct").textContent=pct+"%";
+}
+function resetAll(){ if(confirm("确定清空所有掌握进度？")){ state={}; save(); location.reload(); } }
+
+function render(){
+  const app=document.getElementById("app"); app.innerHTML="";
+  COURSE.forEach((m,mi)=>{
+    const mod=document.createElement("div"); mod.className="module"+(mi===0?" open":"");
+    const passed = state[mi]?Object.keys(state[mi]).length:0;
+    const done = passed>=m.quiz.length;
+    mod.innerHTML=`
+      <div class="mhead" onclick="toggle(${mi})">
+        <div class="no">${mi+1}</div>
+        <h2>${m.title}</h2>
+        <span class="tag">${m.sub}</span>
+        <span class="state ${done?'done':''}" id="st${mi}">${done?'✅ 已掌握':(passed?('已掌握 '+passed+'/'+m.quiz.length):'未开始')}</span>
+      </div>
+      <div class="mbody" id="body${mi}"></div>`;
+    app.appendChild(mod);
+    const body=mod.querySelector("#body"+mi);
+    m.blocks.forEach(b=>{
+      const d=document.createElement("div"); d.className="block";
+      d.innerHTML=`<span class="lab ${b.cls}">${b.lab}</span>${b.html}`;
+      body.appendChild(d);
+    });
+    const quiz=document.createElement("div"); quiz.className="quiz";
+    quiz.innerHTML=`<h3>📝 本节自测（3 题）· 答对标记掌握，答错给解析并生成相似题重测</h3>`;
+    m.quiz.forEach((q,qi)=> quiz.appendChild(buildQ(mi,qi,q)));
+    body.appendChild(quiz);
+  });
+  updateBar();
+  try{ buildSentence(); }catch(e){}
+}
+function toggle(mi){document.getElementById("body"+mi).parentElement.classList.toggle("open");}
+
+function buildQ(mi,qi,q){
+  const wrap=document.createElement("div"); wrap.className="q";
+  wrap.dataset.qi=qi;
+  drawQ(wrap,mi,qi,q,q,0);
+  return wrap;
+}
+function drawQ(wrap,mi,qi,q,cur,simIdx){
+  const opts=cur.o.map((t,i)=>`<label class="opt" data-i="${i}"><input type="radio" name="q${mi}_${qi}" value="${i}">${t}</label>`).join("");
+  wrap.innerHTML=`<div class="qt">${simIdx>0?'(相似题) ':''}${cur.q}</div>${opts}
+    <div class="qbtns"><button class="b-sub" onclick="submitQ(this)">提交</button></div>
+    <div class="fb" id="fb${mi}_${qi}"></div>`;
+  wrap.querySelectorAll(".opt").forEach(el=>{
+    el.addEventListener("click",()=>{
+      wrap.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel"));
+      el.classList.add("sel");
+      el.querySelector("input").checked=true;
+    });
+  });
+  wrap._cur=cur; wrap._simIdx=simIdx;
+}
+function submitQ(btn){
+  const wrap=btn.closest(".q");
+  const cur=wrap._cur;
+  const checked=wrap.querySelector('input[type=radio]:checked');
+  const fb=wrap.querySelector(".fb");
+  if(!checked){ fb.className="fb no"; fb.innerHTML="请先选择一个答案。"; return; }
+  const ans=parseInt(checked.value);
+  wrap.querySelectorAll(".opt").forEach(o=>{
+    const i=parseInt(o.dataset.i);
+    if(i===cur.a) o.classList.add("correct");
+    if(i===ans && i!==cur.a) o.classList.add("wrong");
+  });
+  btn.disabled=true;
+  if(ans===cur.a){
+    fb.className="fb ok";
+    fb.innerHTML=`<b>✅ 答对！</b>这条逻辑你已内化。${cur.e}`;
+    state[miOf(wrap)]=state[miOf(wrap)]||{}; state[miOf(wrap)][qiOf(wrap)]=true; save();
+    refreshState(miOf(wrap));
+  }else{
+    fb.className="fb no";
+    const q=COURSE[miOf(wrap)].quiz[qiOf(wrap)];
+    const hasSim=q.sim && q.sim.length>0 && wrap._simIdx < q.sim.length;
+    fb.innerHTML=`<b>❌ 还没吃透。</b>${cur.e}`+
+      (hasSim?`<div class="qbtns" style="margin-top:8px"><button class="b-sim" onclick="nextSim(this)">🔁 再做一道相似题巩固</button></div>`:`<div style="margin-top:6px;font-size:12.5px;color:#7b241c">本题暂无相似题，重读上方“底层逻辑”后再试。</div>`);
+  }
+}
+function miOf(wrap){ return parseInt(wrap.closest(".module").querySelector(".no").textContent)-1; }
+function qiOf(wrap){ return parseInt(wrap.dataset.qi); }
+function nextSim(btn){
+  const wrap=btn.closest(".q");
+  const mi=miOf(wrap), qi=qiOf(wrap);
+  const q=COURSE[mi].quiz[qi];
+  const nxt=wrap._simIdx+1;
+  drawQ(wrap,mi,qi,q,q.sim[nxt-1],nxt);
+}
+function refreshState(mi){
+  const m=COURSE[mi];
+  const passed=state[mi]?Object.keys(state[mi]).length:0;
+  const done=passed>=m.quiz.length;
+  const st=document.getElementById("st"+mi);
+  st.className="state "+(done?"done":"");
+  st.textContent=done?"✅ 已掌握":(passed?("已掌握 "+passed+"/"+m.quiz.length):"未开始");
+}
+
+function buildSentence(){
+  const g=id=>document.getElementById(id).value;
+  const out=`在【${g('s1')}】环境下，因为【${g('s2')}】推动美联储【${g('s3')}】，所以实际利率大概率【${g('s4')}】、美元【${g('s5')}】、风险溢价【${g('s6')}】；因此黄金中短期偏【${g('s7')}】。若出现信用/流动性/供给/政策预期反转，则以上逻辑需重新定价。`;
+  document.getElementById('sentenceOut').textContent=out;
+}
+document.querySelectorAll('.gen select').forEach(s=>s.addEventListener('change',buildSentence));
+
+render();
+</script>
+</body>
+</html>
