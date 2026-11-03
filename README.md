@@ -65,11 +65,24 @@ zhaangzee-215ing/
 
 ## 快速开始
 
-### 用法一：直接打开学习网页
+### 用法一：打开学习网页（⚠️ 先看这条说明）
 
-1. 下载或克隆本仓库；
-2. 打开 [`gold-finance-logic/assets/finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html)（双击即可，浏览器本地运行，**无需联网、无需后端**）；
-3. 按需展开各模块，读完每节后做 3 道自测题；答错会给出解析并自动生成相似题重测，直到吃透。
+> **重要：GitHub 不会把 `.html` 当网页渲染。** 本仓库里点开 [`finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html) 显示的**是源码（一段代码），不是可交互页面**。要看到真正的网页，请用下面任一方式**下载到本地再用浏览器打开**：
+
+**方式 A · 直接用你本机已有的文件（最省事）**
+- 本机已有一份最新成品，双击即可在浏览器打开看到完整网页：
+  ```
+  C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html
+  ```
+  （也可在浏览器地址栏直接输入 `file:///C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html`）
+
+**方式 B · 从本仓库下载**
+1. 进入 [`gold-finance-logic/assets/finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html)；
+2. 点页面右上角 **Raw** → 浏览器另存为 `.html` 到本地；
+3. **双击该文件**用浏览器打开，即出现可交互学习页面（**无需联网、无需后端**）。
+
+**方式 C · 安装为 Skill 后由 WorkBuddy 打开**
+- 参见[用法二](#用法二安装为-workbuddy-skill)，安装后由 WorkBuddy 复制到本地并打开。
 
 > 提示：用浏览器本地 `file://` 打开时，`localStorage` 可用，掌握进度能长期保存；在个别沙箱化预览里若进度不保存，属正常现象，内容照常显示。
 
@@ -123,7 +136,9 @@ cp -r gold-finance-logic "$HOME/.workbuddy/skills/gold-finance-logic"
 
 - 📘 Skill 入口与工作流程：[`gold-finance-logic/SKILL.md`](gold-finance-logic/SKILL.md)
 - 📗 完整知识底稿（唯一事实来源）：[`gold-finance-logic/references/finance_logic.md`](gold-finance-logic/references/finance_logic.md)
-- 🎯 可交互学习网页：[`gold-finance-logic/assets/finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html)
+- 🎯 可交互学习网页（仓库源码，点开是代码）：[`gold-finance-logic/assets/finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html)
+  - ⚠️ **GitHub 上点开上面链接看到的是源码，不是网页**。要打开交互页面，见[用法一](#用法一打开学习网页)。
+  - 💻 **本机已有成品文件（双击即用）**：`C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html`
 - 🧪 判断句模板：`在【环境】下，因为【矛盾】推动美联储【转鹰/鸽】，所以实际利率【上行/下行】、美元【走强/走弱】、风险溢价【上升/下降】；因此黄金中短期偏【多/空/震荡】。`
 
 ---

@@ -14,6 +14,9 @@
 - `references/finance_logic.md` — 完整知识底稿（总纲 / 四层传导 / 三条链 / 五大反转 / 三反常案例 / 七步法 / 情景矩阵）
 - `assets/finance-logic-framework.html` — 可交互学习网页模板（双击即用，无需联网）
 
+> ⚠️ **GitHub 上点开 `assets/finance-logic-framework.html` 看到的是源码，不是网页。** 要打开可交互页面，请下载该文件到本地双击，或直接用你本机已有的成品文件：
+> `C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html`
+
 ## 安装
 
 ```bash
