@@ -1,32 +1,55 @@
-# gold-finance-logic · 金融底层逻辑学习框架（WorkBuddy Skill）
+# gold-finance-logic
 
-以「黄金」为锚点，把零散金融知识梳理成「是什么 → 为什么（底层逻辑）→ 反常案例 → 每节 3 题自测、答错生成相似题」的可内化认知框架。
+以黄金为锚的金融底层逻辑学习框架，既是一份可交互学习网页，也是一套可安装到 WorkBuddy 的 Skill。
+
+## 直接体验
+
+打开在线交互页：
+
+<https://zhaangzee.github.io/zhaangzee-215ing/>
+
+网页包含：
+
+- 6 个学习模块：黄金属性、四层传导、三条底层链、五大反转、三个宏观案例、实战七步。
+- 18 道基础自测，答错后提供解析与相似题重测。
+- 浏览器本地进度保存。
+- 判断句生成器与情景矩阵。
 
 ## 这个 Skill 能做什么
 
-- 生成可交互的金融学习网页（含进度条、自测、相似题重测、判断句生成器）
-- 用框架分析财经事件（CPI、美联储、地缘、央行购金对黄金与资产价格的影响）
-- 按「每节 3 题」出题、带练、答错当场出相似题
-
-## 目录
-
-- `SKILL.md` — Skill 元信息与工作流程（入口）
-- `references/finance_logic.md` — 完整知识底稿（总纲 / 四层传导 / 三条链 / 五大反转 / 三反常案例 / 七步法 / 情景矩阵）
-- `assets/finance-logic-framework.html` — 可交互学习网页模板（双击即用，无需联网）
-
-> ⚠️ **GitHub 上点开 `assets/finance-logic-framework.html` 看到的是源码，不是网页。** 要打开可交互页面，请下载该文件到本地双击，或直接用你本机已有的成品文件：
-> `C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html`
+- 用金融底层逻辑分析财经事件。
+- 按课程口径生成学习材料与自测题。
+- 在用户答错后生成结构相同、措辞不同的相似题。
+- 把判断整理成可检验的完整句子。
 
 ## 安装
 
+从仓库根目录执行：
+
 ```bash
-# 复制到用户级 Skill 目录（跨项目可用）
+mkdir -p "$HOME/.workbuddy/skills"
 cp -r gold-finance-logic "$HOME/.workbuddy/skills/gold-finance-logic"
 ```
 
-## 核心理念
+Windows PowerShell：
 
-**黄金价格 = 机会成本 + 保险价值**；中短期看「实际利率 + 美元」，长周期看「信用 + 央行购金」。一切宏观指标都只是改变预期的入口，而非直接原因。
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.workbuddy\skills" | Out-Null
+Copy-Item -Recurse -Force ".\gold-finance-logic" "$HOME\.workbuddy\skills\gold-finance-logic"
+```
 
-> 返回仓库总说明：[../README.md](../README.md)
-> 内容仅为金融认知学习材料，不构成投资建议。
+## 目录
+
+| 文件 | 用途 |
+| --- | --- |
+| `SKILL.md` | Skill 元信息、触发条件与工作流 |
+| `references/finance_logic.md` | 完整知识底稿与内容口径 |
+| `assets/finance-logic-framework.html` | 可交互学习网页 |
+
+## 内容底线
+
+**黄金价格 = 机会成本 + 保险价值**。中短期看实际利率与美元，长周期看信用风险与央行购金。所有宏观指标都只是改变预期的入口，不是价格的直接原因。
+
+> 本目录内容仅用于金融认知学习，不构成投资建议。
+
+[返回项目主页](../README.md)

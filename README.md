@@ -1,154 +1,154 @@
-# 💡 金融底层逻辑学习框架 · 以黄金为锚
+# 金融底层逻辑学习框架
 
-> 把零散的金融知识，梳理成一套**可内化**的底层认知框架：以「黄金」为入口，沿「机会成本（实际利率）→ 美元 → 信用风险 / 央行购金」这一条根，解释宏观数据与资产价格的关系。
+以黄金为锚，把零散的金融知识整理成一条可复用的因果链：
+
+**机会成本（实际利率）→ 美元 → 信用风险与央行购金 → 资产价格**
+
+不是背宏观指标，而是理解每个指标通过哪条链影响预期。配套的交互学习页包含 **6 个模块、18 道自测、相似题重测和判断句生成器**，学习进度自动保存在本地浏览器。
+
+<p>
+  <a href="https://zhaangzee.github.io/zhaangzee-215ing/"><img src="https://img.shields.io/badge/开始学习-在线交互版-176b51?style=for-the-badge" alt="开始学习"></a>
+  <a href="gold-finance-logic/SKILL.md"><img src="https://img.shields.io/badge/查看内容-Skill%20%E6%96%87%E6%A1%A3-a8730f?style=for-the-badge" alt="查看 Skill 文档"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-17201c?style=for-the-badge" alt="MIT License"></a>
+</p>
+
+> 在线版：<https://zhaangzee.github.io/zhaangzee-215ing/>
 >
-> 配套一个**可交互学习网页**：每节 3 道自测题，答对标记掌握，答错自动生成相似题重测，进度本地保存；末附「判断句生成器」，把框架落成可操作的句子。
+> 如果页面尚未完成首次部署，可在仓库的 **Actions** 页面等待 `Deploy interactive guide` 运行完成。
 
 ---
 
-## 📑 目录
+## 学习入口
 
-- [核心理念](#核心理念)
-- [框架总览（6 大模块）](#框架总览6-大模块)
-- [文件结构](#文件结构)
-- [快速开始](#快速开始)
-  - [用法一：直接打开学习网页](#用法一直接打开学习网页)
-  - [用法二：安装为 WorkBuddy Skill](#用法二安装为-workbuddy-skill)
-- [教学法说明](#教学法说明)
-- [五大反转速查](#五大反转速查)
-- [相关链接](#相关链接)
-- [免责声明](#免责声明)
+| 入口 | 适合场景 |
+| --- | --- |
+| [在线交互学习页](https://zhaangzee.github.io/zhaangzee-215ing/) | 直接开始学习，无需下载 |
+| [本地 HTML 页面](gold-finance-logic/assets/finance-logic-framework.html) | 查看或修改网页源码 |
+| [Skill 工作流](gold-finance-logic/SKILL.md) | 让 WorkBuddy 用这套框架分析事件、出题带练 |
+| [知识底稿](gold-finance-logic/references/finance_logic.md) | 查阅完整理论与案例，作为内容维护的唯一依据 |
 
----
+> GitHub 文件预览中的 `.html` 会显示源码，而不是网页。要直接打开学习页，请使用上面的在线入口。
 
-## 核心理念
+## 你会学到什么
+
+- 为什么黄金可以被概括为 **“机会成本 + 保险价值”**。
+- CPI、非农、美联储表态、美元和地缘风险分别通过哪条链传导。
+- 为什么 CPI 很高时黄金可能下跌，降息时黄金也可能不涨。
+- 如何区分需求型通胀、供给型通胀与信用风险。
+- 如何用七步法把宏观判断整理成一句可检验的话。
+- 如何用自测与相似题发现“看懂了但没真正掌握”的知识缺口。
+
+## 学习路线
+
+| 模块 | 主题 | 关键问题 |
+| --- | --- | --- |
+| 01 | 黄金是什么 | 黄金凭什么跨文明、跨时代被信任？ |
+| 02 | 四层传导 | 宏观数据如何经过政策预期到达金价？ |
+| 03 | 三条底层链 | 机会成本、美元、风险信用，哪条链正在主导？ |
+| 04 | 五大反转 | 哪些直觉在特定环境下会失效？ |
+| 05 | 三个反常案例 | 布雷顿森林、日本通缩、俄罗斯外储说明了什么？ |
+| 06 | 实战判断法 | 如何先定环境、再定主链，最后用价格确认？ |
+
+## 核心模型
 
 **黄金价格 = 持有它的机会成本 + 持有它的保险价值**
 
-- **机会成本** ← 美债实际收益率（TIPS）方向 → 主链
-- **保险价值** ← 美元信用 / 风险事件 / 央行购金 → 长周期底部
+- **机会成本**：美债实际收益率越高，持有无息黄金的代价越大。
+- **保险价值**：美元信用、地缘风险、制裁与央行购金共同抬高长期底部。
 
-一句话记忆：**中短期看「实际利率 + 美元」，长周期看「信用 + 央行购金」。**
+一句话记忆：
 
-一切宏观指标（CPI、非农、美联储表态、地缘冲突……）都只是改变「实际利率 / 美元 / 信用预期」的**入口**，而不是直接原因——这是整套框架的灵魂。所有解释最终都回到这一点。
+> 中短期看「实际利率 + 美元」，长周期看「信用 + 央行购金」。
 
----
-
-## 框架总览（6 大模块）
-
-| 模块 | 主题 | 核心内容 |
-|------|------|----------|
-| 一 | **黄金是什么** | 稀缺 / 跨文明共识 / 不依赖政府背书；定价两分法（机会成本 + 保险价值） |
-| 二 | **四层传导** | 宏观数据 → 政策预期 → 定价锚（实际利率 / 美元）→ 风险与结构；四条必记规则 |
-| 三 | **三条底层链 + 通胀双路径** | 机会成本链 / 计价美元链 / 风险信用链；需求型 / 供给型 / 信用型通胀；实盘「四个不要」 |
-| 四 | **五大反转** | 直觉会骗你的五种反直觉情形（对接当铺财经《决战今晚 CPI》那期：CPI 高 ≠ 黄金涨） |
-| 五 | **三个反常宏观世界** | 布雷顿森林体系崩塌 / 日本失去的三十年 / 俄罗斯 3000 亿外储被冻结 |
-| 六 | **实战判断法** | 七步法 + 判断句模板 + 情景矩阵 + 判断句生成器 |
-
----
-
-## 文件结构
-
-```
-zhaangzee-215ing/
-├── README.md                          # 本说明文档
-└── gold-finance-logic/                # WorkBuddy Skill：金融底层逻辑学习框架
-    ├── SKILL.md                       # Skill 元信息与工作流程（Skill 入口）
-    ├── README.md                      # Skill 目录内的简介与安装说明
-    ├── references/
-    │   └── finance_logic.md           # 完整知识底稿（总纲 / 四层 / 三链 / 五反转 / 三案例 / 七步 / 矩阵）
-    └── assets/
-        └── finance-logic-framework.html  # 可交互学习网页（双击即用，无需联网/后端）
-```
-
----
+一切宏观指标都只是改变「实际利率 / 美元 / 信用预期」的入口，而不是价格的直接原因。
 
 ## 快速开始
 
-### 用法一：打开学习网页（⚠️ 先看这条说明）
+### 在线使用
 
-> **重要：GitHub 不会把 `.html` 当网页渲染。** 本仓库里点开 [`finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html) 显示的**是源码（一段代码），不是可交互页面**。要看到真正的网页，请用下面任一方式**下载到本地再用浏览器打开**：
+直接打开：
 
-**方式 A · 直接用你本机已有的文件（最省事）**
-- 本机已有一份最新成品，双击即可在浏览器打开看到完整网页：
-  ```
-  C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html
-  ```
-  （也可在浏览器地址栏直接输入 `file:///C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html`）
+<https://zhaangzee.github.io/zhaangzee-215ing/>
 
-**方式 B · 从本仓库下载**
-1. 进入 [`gold-finance-logic/assets/finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html)；
-2. 点页面右上角 **Raw** → 浏览器另存为 `.html` 到本地；
-3. **双击该文件**用浏览器打开，即出现可交互学习页面（**无需联网、无需后端**）。
+学习记录存放在浏览器 `localStorage`，换浏览器或清理站点数据后会重置。
 
-**方式 C · 安装为 Skill 后由 WorkBuddy 打开**
-- 参见[用法二](#用法二安装为-workbuddy-skill)，安装后由 WorkBuddy 复制到本地并打开。
-
-> 提示：用浏览器本地 `file://` 打开时，`localStorage` 可用，掌握进度能长期保存；在个别沙箱化预览里若进度不保存，属正常现象，内容照常显示。
-
-### 用法二：安装为 WorkBuddy Skill
-
-让 WorkBuddy 在相关对话中自动加载这套框架（生成学习网页、分析财经事件、出题带练）：
+### 本地打开
 
 ```bash
-# 方式 A：直接复制（推荐，用户级，跨项目可用）
-cp -r gold-finance-logic "$HOME/.workbuddy/skills/gold-finance-logic"
-
-# 方式 B：用 WorkBuddy 的 skill 管理 / 市场安装，指向本仓库的 gold-finance-logic 目录
+git clone https://github.com/zhaangzee/zhaangzee-215ing.git
+cd zhaangzee-215ing
 ```
 
-安装后，当你说「帮我梳理金融底层逻辑 / 用框架分析今晚 CPI / 出 3 道题自测」等意图时，WorkBuddy 会自动启用该 Skill。
+双击根目录的 `index.html`，或直接用浏览器打开：
 
-`SKILL.md` 中已声明触发词：金融底层逻辑、黄金涨跌、CPI 对黄金、布雷顿森林、日本失去的三十年、俄罗斯外储、五大反转、央行购金、去美元化、金融学习框架 / 出题 / 自测 / 相似题重测。
+```text
+gold-finance-logic/assets/finance-logic-framework.html
+```
 
----
+如需本地服务器预览：
 
-## 教学法说明
+```bash
+python -m http.server 8000
+```
 
-本框架刻意采用「**是什么 → 为什么（底层逻辑）→ 反常案例 → 每节 3 题自测 → 答错生成相似题重测**」的结构，对抗「看得快、忘得快」：
+然后访问 `http://localhost:8000/`。
 
-1. **是什么（what）**：先给定义、现象、公式，建立共识；
-2. **为什么（why）**：把现象归因到「实际利率 / 美元 / 信用风险」这条根上，讲清底层因果；
-3. **反常案例（case）**：用反直觉事件（五大反转、三个宏观案例）检验认知是否牢固；
-4. **自测 + 重测**：每节 3 题，答对标记「已内化」，答错给解析并出相似题，直到吃透才进阶。
+### 安装为 WorkBuddy Skill
 
-> 设计要点：不要堆砌知识，要讲清「根」——指标只是改变预期的入口，而非直接原因。
+Skill 适合让 WorkBuddy 在后续对话中自动调用这套框架，分析 CPI、美联储、地缘风险或生成练习题。
 
----
+**macOS / Linux：**
 
-## 五大反转速查
+```bash
+mkdir -p "$HOME/.workbuddy/skills"
+cp -r gold-finance-logic "$HOME/.workbuddy/skills/gold-finance-logic"
+```
 
-最容易犯错的五种「看起来该涨 / 跌，实际反着来」：
+**Windows PowerShell：**
 
-| # | 直觉 | 真实逻辑 |
-|---|------|----------|
-| ① | TIPS 上升，黄金也涨 → 模型失效 | 美元信用危机，资金抛美债增配黄金 |
-| ② | 美元上涨，黄金也涨 → 该做空 | 系统性危机中，美元与黄金同为避险资产同涨 |
-| ③ | **CPI 很高，黄金下跌** → 通胀=利多 | 加息预期与实际利率上行更快，机会成本压过通胀对冲 |
-| ④ | 美联储降息，黄金下跌 → 降息=利多 | 危机式降息（衰退 / 流动性危机）实际利率未必降 |
-| ⑤ | 地缘冲突升级，黄金下跌 → 避险无效 | 冲突推高油价与通胀，逼央行偏鹰，利率链压过避险链 |
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.workbuddy\skills" | Out-Null
+Copy-Item -Recurse -Force ".\gold-finance-logic" "$HOME\.workbuddy\skills\gold-finance-logic"
+```
 
-> 实战对接：当铺财经《决战今晚 CPI》讲的就是 **反转③**——盯的不是「CPI 高 = 买黄金」，而是 CPI 读数把「实际利率预期」往哪边推。
+安装后可直接提出：
 
----
+- “用这套框架分析今晚的 CPI。”
+- “按每节 3 题带我自测。”
+- “我答错了，给一道结构相同但措辞不同的相似题。”
 
-## 相关链接
+## 项目结构
 
-- 📘 Skill 入口与工作流程：[`gold-finance-logic/SKILL.md`](gold-finance-logic/SKILL.md)
-- 📗 完整知识底稿（唯一事实来源）：[`gold-finance-logic/references/finance_logic.md`](gold-finance-logic/references/finance_logic.md)
-- 🎯 可交互学习网页（仓库源码，点开是代码）：[`gold-finance-logic/assets/finance-logic-framework.html`](gold-finance-logic/assets/finance-logic-framework.html)
-  - ⚠️ **GitHub 上点开上面链接看到的是源码，不是网页**。要打开交互页面，见[用法一](#用法一打开学习网页)。
-  - 💻 **本机已有成品文件（双击即用）**：`C:/Users/Z/WorkBuddy/2026-11-01-10-41-32/金融底层逻辑学习框架.html`
-- 🧪 判断句模板：`在【环境】下，因为【矛盾】推动美联储【转鹰/鸽】，所以实际利率【上行/下行】、美元【走强/走弱】、风险溢价【上升/下降】；因此黄金中短期偏【多/空/震荡】。`
+```text
+zhaangzee-215ing/
+├── index.html                          # GitHub Pages 入口
+├── README.md                           # 项目说明与学习入口
+├── LICENSE                             # MIT License
+├── .github/
+│   └── workflows/
+│       └── pages.yml                   # GitHub Pages 自动部署
+└── gold-finance-logic/                 # WorkBuddy Skill
+    ├── SKILL.md                        # 触发条件、工作流与使用约束
+    ├── README.md                       # Skill 目录说明
+    ├── references/
+    │   └── finance_logic.md            # 完整知识底稿
+    └── assets/
+        └── finance-logic-framework.html # 交互学习页
+```
 
----
+## 内容维护
+
+- 理论口径以 `gold-finance-logic/references/finance_logic.md` 为准。
+- 网页中的课程数据位于 `gold-finance-logic/assets/finance-logic-framework.html` 的 `COURSE` 常量。
+- 修改后先在桌面与手机宽度下检查章节展开、答题反馈、相似题重测和判断句生成器。
+- 仓库推送到 `main` 分支后，GitHub Actions 会自动更新在线页面。
+
+> 具体行情数字只作为历史案例，不应脱离发生时间和市场背景使用。分析新事件时请使用最新数据。
 
 ## 免责声明
 
-⚠️ 本仓库所有内容均为**金融认知学习材料**，用于建立底层思维框架，**不构成任何投资建议**。市场有风险，决策请独立判断，并咨询持牌专业人士。
-
----
+本项目所有内容均为金融认知学习材料，用于建立底层思维框架，**不构成任何投资建议**。市场有风险，投资决策需独立判断，并咨询具备相应资质的专业人士。
 
 ## License
 
-MIT — 可自由学习、修改、分发，但请保留本免责声明。
+[MIT](LICENSE)
